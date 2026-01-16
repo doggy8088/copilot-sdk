@@ -1,6 +1,8 @@
 package e2e
 
 import (
+	"encoding/json"
+	"os"
 	"regexp"
 	"strings"
 	"testing"
@@ -702,6 +704,20 @@ func TestSession(t *testing.T) {
 		matched, _ := regexp.MatchString(`^[a-f0-9-]+$`, session.SessionID)
 		if !matched {
 			t.Errorf("Expected session ID to match UUID pattern, got %q", session.SessionID)
+		}
+
+		// Verify config.json was written to the custom config dir
+		configPath := customConfigDir + "/github-copilot/config.json"
+		configData, err := os.ReadFile(configPath)
+		if err != nil {
+			t.Fatalf("Failed to read config.json at %s: %v", configPath, err)
+		}
+		var configContent map[string]interface{}
+		if err := json.Unmarshal(configData, &configContent); err != nil {
+			t.Fatalf("Failed to parse config.json: %v", err)
+		}
+		if configContent["sessionId"] != session.SessionID {
+			t.Errorf("Expected config.json sessionId to be %q, got %v", session.SessionID, configContent["sessionId"])
 		}
 
 		// Session should work normally with custom config dir
