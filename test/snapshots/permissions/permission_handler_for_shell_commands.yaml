@@ -5,7 +5,7 @@ conversations:
       - role: system
         content: ${system}
       - role: user
-        content: Run 'echo hello' and tell me the output
+        content: Run 'echo hello world' and tell me the output
       - role: assistant
         tool_calls:
           - id: toolcall_0
@@ -19,12 +19,12 @@ conversations:
             type: function
             function:
               name: ${shell}
-              arguments: '{"command":"echo hello","description":"Run echo hello"}'
+              arguments: '{"command":"echo hello world","description":"Run echo hello world"}'
   - messages:
       - role: system
         content: ${system}
       - role: user
-        content: Run 'echo hello' and tell me the output
+        content: Run 'echo hello world' and tell me the output
       - role: assistant
         tool_calls:
           - id: toolcall_0
@@ -36,7 +36,7 @@ conversations:
             type: function
             function:
               name: ${shell}
-              arguments: '{"command":"echo hello","description":"Run echo hello"}'
+              arguments: '{"command":"echo hello world","description":"Run echo hello world"}'
       - role: tool
         tool_call_id: toolcall_0
         content: Intent logged
@@ -44,6 +44,20 @@ conversations:
         tool_call_id: toolcall_1
         content: |-
           hello
+          world
           <exited with exit code 0>
       - role: assistant
-        content: The output is `hello` with exit code 0 (success).
+        content: >-
+          The output is:
+
+          ```
+
+          hello
+
+          world
+
+          ```
+
+
+          Note that PowerShell's `echo` (which is an alias for `Write-Output`) outputs "hello" and "world" on separate
+          lines.
