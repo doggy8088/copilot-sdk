@@ -692,6 +692,14 @@ class SessionEventType(Enum):
     TOOL_EXECUTION_START = "tool.execution_start"
     TOOL_USER_REQUESTED = "tool.user_requested"
     USER_MESSAGE = "user.message"
+    # UNKNOWN is used for forward compatibility - new event types from the server
+    # will map to this value instead of raising an error
+    UNKNOWN = "unknown"
+
+    @classmethod
+    def _missing_(cls, value: object) -> "SessionEventType":
+        """Handle unknown event types gracefully for forward compatibility."""
+        return cls.UNKNOWN
 
 
 @dataclass
